@@ -200,26 +200,40 @@ input:focus{
 <script>
   const supabaseClient = supabase.createClient(
     "https://czbznranghdpefswmluc.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnpucmFuZ2hkcGVmc3dtbHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxNTQxNTUsImV4cCI6MjA4MTczMDE1NX0.lF69yvMl82OL-ZouGUUU8u54VP4N-4X3DzVwMcDE1Ng"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnpucmFuZ2hkcGVmc3dtbHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxNTQxNTUsImV4cCI6MjA4MTczMDE1NX0.lF69yvMl82OL-ZouGUUU8u54VP4N-4X3DzVwMcDE1Ng",
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
   );
 
-  async function login(){
+  async function login() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    const { error } = await supabaseClient.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
       email,
       password
     });
 
-    if(error){
+    if (error) {
       alert(error.message);
       return;
     }
 
-    window.location.href = "game.html";
+    // IMPORTANT: wait for session to exist
+    if (data.session) {
+      window.location.href = "game.html";
+    } else {
+      alert("Login failed, no session created");
+    }
   }
 </script>
 
+
 </body>
 </html>
+
