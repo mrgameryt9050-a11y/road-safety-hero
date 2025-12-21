@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseClient = supabase.createClient(
+    "https://czbznranghdpefswmluc.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnpucmFuZ2hkcGVmc3dtbHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxNTQxNTUsImV4cCI6MjA4MTczMDE1NX0.lF69yvMl82OL-ZouGUUU8u54VP4N-4X3DzVwMcDE1Ng"
+  );
+
+  async function checkAuth() {
+    const { data } = await supabaseClient.auth.getSession();
+    if (!data.session) {
+      window.location.href = "login.html";
+    }
+  }
+
+  checkAuth();
+</script>
+
+
+    <script>
+  const user = JSON.parse(localStorage.getItem("rsh_user"));
+  if (!user) {
+    window.location.href = "login.html";
+  }
+</script>
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn road safety through interactive quizzes and mini-games.">
+  <meta name="theme-color" content="#00d4ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Road%20Safety%20Hero%22%2C%22short_name%22%3A%22RSH%22%2C%22description%22%3A%22Master%20road%20safety%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000%22%2C%22theme_color%22%3A%22%2300d4ff%22%7D">
+  <title>Road Safety Hero</title>
+  <style>
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0099ff 0%, #00d4ff 25%, #00ff99 50%, #ff6b35 75%, #ff3366 100%);
+      background-size: 400% 400%;
+      color: #fff;
+      animation: gradientShift 12s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      width: 95%;
+      max-width: 520px;
+      background: rgba(20, 20, 35, 0.92);
+      backdrop-filter: blur(20px);
+      padding: 30px 26px;
+      border-radius: 28px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 212, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      animation: slideUp 0.6s ease-out, glow 4s ease-in-out infinite;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+      50% {
+        box-shadow: 0 8px 32px rgba(0, 212, 255, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    h1, h2 {
+      margin-bottom: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      animation: fadeInDown 0.7s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 0 0 8px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00d4ff, #ff6b35, #00ff99);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+      animation: glow 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+    }
+
+    h2 {
+      font-size: 26px;
+      margin: 12px 0;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00d4ff 0%, #ff6b35 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    }
+
+    h3 {
+      font-size: 18px;
+      margin: 0 0 12px;
+      background: linear-gradient(135deg, #00d4ff, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+
+    .btn-main {
+      padding: 14px 24px;
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(135deg, #00d4ff 0%, #ff6b35 100%);
+      color: white;
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4), 0 4px 15px rgba(255, 107, 53, 0.3);
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      min-height: 44px;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 13px;
+    }
+
+    .btn-main::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+      z-index: 1;
+    }
+
+    .btn-main:hover::after {
+      left: 100%;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 212, 255, 0.5), 0 6px 20px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-main:focus-visible {
+      outline: 2px solid #ffd700;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3), 0 8px 25px rgba(0, 212, 255, 0.4);
+    }
+
+    .btn-main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.4s ease;
+      z-index: 0;
+    }
+
+    .btn-main:hover::before {
+      left: 100%;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0, 212, 255, 0.8), 0 0 20px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-main:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-level {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid #00d4ff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 6px;
+      min-width: 110px;
+      min-height: 44px;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 53, 0.15));
+      color: #fff;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+    }
+
+    .btn-level::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+      z-index: 0;
+    }
+
+    .btn-level:hover {
+      border-color: #ff6b35;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(255, 107, 53, 0.25));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.35), 0 4px 12px rgba(255, 107, 53, 0.25);
+    }
+
+    .btn-level:hover::before {
+      left: 100%;
+    }
+
+    .btn-level.selected {
+      background: linear-gradient(135deg, #00d4ff, #ff6b35);
+      border-color: #ff6b35;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.5), 0 4px 15px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-level:focus-visible {
+      outline: 2px solid #ffd700;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3), 0 8px 25px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-level:hover {
+      background: #424242;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 255, 0.5);
+      border-color: #00d4ff;
+    }
+
+    .btn-level:hover::before {
+      left: 100%;
+    }
+
+    .btn-level.selected {
+      background: linear-gradient(135deg, #00d4ff, #ff6b35);
+      color: #fff;
+      border-color: #ff6b35;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.6), 0 0 10px rgba(255, 107, 53, 0.4);
+      transform: scale(1.05);
+    }
+
+    .option-btn {
+      padding: 12px 14px;
+      width: 100%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      margin: 8px 0;
+      background: rgba(51, 51, 51, 0.6);
+      color: white;
+      text-align: left;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 6px solid transparent;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      min-height: 44px;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+
+    .option-btn:focus-visible {
+      outline: 2px solid #ffd700;
+      box-shadow: inset 0 0 0 2px #ffd700, 0 0 0 3px rgba(255, 215, 0, 0.3);
+    }
+
+    .option-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: rgba(0, 212, 255, 0.2);
+      transition: width 0.3s ease;
+      z-index: 0;
+    }
+
+    .option-btn:hover::before {
+      width: 100%;
+    }
+
+    .option-btn:hover {
+      background: rgba(51, 51, 51, 0.9);
+      border-left: 6px solid #00d4ff;
+      border-color: rgba(0, 212, 255, 0.6);
+      transform: translateX(5px);
+    }
+
+    .option-btn:disabled:not(.correct):not(.wrong) {
+      opacity: 0.7;
+    }
+
+    #score, #question-number, #timer {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 6px;
+      animation: fadeInDown 0.6s ease-out;
+    }
+
+    #timer {
+      font-weight: 600;
+      color: #ff6b35;
+    }
+
+    #timer.warning {
+      color: #ff6b6b;
+      animation: timerWarning 0.6s ease-in-out infinite;
+    }
+
+    @keyframes timerWarning {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .correct {
+      border-left: 6px solid #00e676 !important;
+      background: rgba(46, 125, 50, 0.7) !important;
+      border-color: #00e676 !important;
+      animation: correctPulse 0.6s ease-out;
+    }
+
+    @keyframes correctPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .wrong {
+      border-left: 6px solid #ff3d00 !important;
+      background: rgba(183, 28, 28, 0.7) !important;
+      border-color: #ff3d00 !important;
+      animation: wrongShake 0.5s ease-out;
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    #game, #result, #runner-game {
+      display: none;
+    }
+
+    #home, #game, #result, #runner-game {
+      animation: fadeInDown 0.5s ease-out;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      margin-bottom: 8px;
+      opacity: 0.9;
+      animation: fadeInDown 0.6s ease-out;
+    }
+
+    .progress-wrapper {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 18px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00d4ff, #ff6b35);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 999px;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.8), 0 0 8px rgba(255, 107, 53, 0.6);
+    }
+
+    #feedback {
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 32px;
+      animation: slideInUp 0.4s ease-out;
+      color: #a0a0a0;
+      font-style: italic;
+      border-left: 3px solid #00d4ff;
+      padding-left: 12px;
+      text-align: left;
+      margin-left: 0;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stars {
+      font-size: 32px;
+      margin: 12px 0;
+      animation: starPulse 0.8s ease-out;
+      letter-spacing: 4px;
+    }
+
+    @keyframes starPulse {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotateZ(-180deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotateZ(0deg);
+      }
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 53, 0.15));
+      border: 1px solid rgba(0, 212, 255, 0.5);
+      font-size: 11px;
+      font-weight: 600;
+      margin: 4px;
+      animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .highscore {
+      font-size: 12px;
+      margin-top: 6px;
+      opacity: 0.8;
+      animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .small {
+      font-size: 12px;
+      opacity: 0.8;
+      animation: fadeInDown 0.6s ease-out;
+    }
+
+    #result {
+      animation: slideUp 0.6s ease-out;
+    }
+
+    .info-panel {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 53, 0.1));
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 12px;
+      margin: 12px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .info-panel:hover {
+      border-color: rgba(0, 212, 255, 0.6);
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 53, 0.15));
+    }
+
+    .info-header {
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #00d4ff;
+    }
+
+    .info-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      font-size: 12px;
+      opacity: 0;
+    }
+
+    .info-content.expanded {
+      max-height: 200px;
+      opacity: 0.9;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .info-icon {
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .info-panel.expanded .info-icon {
+      transform: rotate(180deg);
+    }
+
+    .review-section {
+      margin-top: 16px;
+      text-align: left;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .review-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #00d4ff;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .review-item {
+      background: rgba(51, 51, 51, 0.5);
+      border-left: 4px solid #ff6b35;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      animation: slideInUp 0.4s ease-out;
+    }
+
+    .review-item-q {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .review-item-your {
+      color: #ff6b6b;
+      margin-bottom: 3px;
+    }
+
+    .review-item-correct {
+      color: #00e676;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .stat-box {
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00d4ff;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      opacity: 0.7;
+      font-size: 11px;
+    }
+
+    #runnerCanvas {
+      width: 100%;
+      max-width: 420px;
+      background: #111;
+      border-radius: 16px;
+      border: 2px solid rgba(0, 212, 255, 0.4);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+    }
+
+    .runner-info {
+      font-size: 12px;
+      opacity: 0.85;
+      margin-bottom: 10px;
+    }
+
+    .runner-score {
+      font-size: 14px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .card {
+        max-width: 100%;
+        padding: 20px 16px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 13px;
+      }
+
+      .btn-main, .btn-level {
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+
+      .option-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      .stars {
+        font-size: 28px;
+      }
+
+      .progress-wrapper {
+        height: 8px;
+        margin: 10px 0 14px;
+      }
+
+      .top-row {
+        font-size: 11px;
+      }
+
+      #timer {
+        font-size: 12px;
+      }
+
+      .review-section {
+        max-height: 300px;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .card {
+        padding: 16px 12px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .btn-level {
+        font-size: 12px;
+        padding: 8px 10px;
+        min-width: 90px;
+        margin: 4px;
+      }
+
+      .option-btn {
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      .tag {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 20px;
+      max-width: 500px;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+      animation: slideInDown 0.4s ease-out;
+    }
+
+    body.dark {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+
+    body.dark .card {
+      background: rgba(20, 20, 35, 0.95);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    body.dark input[type="text"],
+    body.dark input[type="number"],
+    body.dark textarea,
+    body.dark select {
+      background: #2a2a3e;
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+    <div style="position:fixed;top:10px;right:10px;z-index:9999;">
+  <button class="btn-level" onclick="logout()">Logout</button>
+</div>
+
+  <div class="card">
+    <div id="home">
+      <h1>🚗 Road Safety Hero</h1>
+      <p style="animation: fadeInDown 0.7s ease-out 0.1s both;">Master road safety with challenging questions at your level.</p>
+
+      <div class="info-panel" id="infoPanel">
+        <div class="info-header">
+          <span>📚 Why Road Safety Matters</span>
+          <span class="info-icon">▼</span>
+        </div>
+        <div class="info-content" id="infoContent">
+          <p>Road accidents are a leading cause of injury and death worldwide. By learning and following traffic rules, you protect yourself, your family, and others on the road. This quiz helps you understand essential safety practices that can save lives every day.</p>
+        </div>
+      </div>
+
+      <p class="small">Choose your difficulty:</p>
+      <div style="animation: fadeInDown 0.7s ease-out 0.2s both;">
+        <button class="btn-level selected" data-level="beginner">🚶‍♂️ Beginner</button>
+        <button class="btn-level" data-level="intermediate">🚲 Intermediate</button>
+        <button class="btn-level" data-level="expert">🚗 Expert</button>
+      </div>
+
+      <div class="stats-container" id="statsContainer" style="display: none;">
+        <div class="stat-box">
+          <div class="stat-value" id="attemptCount">0</div>
+          <div class="stat-label">Attempts</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="bestScore">0</div>
+          <div class="stat-label">Best Score</div>
+        </div>
+      </div>
+
+      <p class="highscore" id="highscore-home"></p>
+
+      <button class="btn-main" onclick="startGame()">Start Quiz → <span style="font-size: 12px;">(or press Enter)</span></button>
+      <button class="btn-main" style="margin-top: 8px;" onclick="openRunnerGame()">Ride SMG Runner 🛵</button>
+      <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+        <button class="btn-level" aria-label="View top scores" onclick="openLeaderboard()">🏆 Leaderboard</button>
+        <button class="btn-level" aria-label="View achievements and badges" onclick="openAchievements()">🎖 Achievements</button>
+        <button class="btn-level" aria-label="Adjust app settings" onclick="openSettings()">⚙️ Settings</button>
+        <button class="btn-level" aria-label="Create custom questions" onclick="openEditor()">✏️ Edit Questions</button>
+        <button class="btn-level" aria-label="View learning analytics" onclick="openAnalytics()">📊 Analytics</button>
+        <button class="btn-level" aria-label="Review questions to master" onclick="openReview()">📚 Repeat</button>
+      </div>
+    </div>
+
+    <div id="game">
+      <div class="top-row">
+        <div id="question-number"></div>
+        <div id="timer"></div>
+      </div>
+
+      <div class="progress-wrapper">
+        <div class="progress-inner" id="progress-bar"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0%</div>
+
+      <div style="display:flex; gap:8px; align-items:center; justify-content:center; margin-top:6px;" id="lifelinesRow">
+        <button class="btn-level" id="btn5050" onclick="use5050()">50/50 (<span id="lifeline5050">2</span>)</button>
+      </div>
+
+      <h2 id="question-text"></h2>
+      <div id="options"></div>
+
+      <div id="score"></div>
+      <div id="feedback"></div>
+    </div>
+
+    <div id="result">
+      <h2>🎉 Game Over</h2>
+      <div class="stars" id="stars"></div>
+      <p id="final-score" style="margin-bottom:6px; font-size: 18px; font-weight: 600;"></p>
+      <p id="title" style="font-size:16px; margin-bottom:4px; background: linear-gradient(135deg, #00d4ff, #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600;"></p>
+      <p id="message" style="font-size:13px; margin-bottom:8px;"></p>
+
+      <div class="stats-container">
+        <div class="stat-box">
+          <div class="stat-value" id="totalTime">0:00</div>
+          <div class="stat-label">Total Time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="avgTime">0:00</div>
+          <div class="stat-label">Avg per Q</div>
+        </div>
+      </div>
+
+      <p class="highscore" id="highscore-result"></p>
+
+      <div id="tags" style="margin: 12px 0;"></div>
+
+      <div class="review-section" id="reviewSection" style="display: none;">
+        <div class="review-title">📋 Questions Review</div>
+        <div id="reviewContent"></div>
+      </div>
+
+      <button class="btn-main" onclick="restartGame()">Play Again → <span style="font-size: 12px;">(or press Enter)</span></button>
+    </div>
+
+    <div id="runner-game">
+      <h2>🛵 SMG Road Runner</h2>
+      <p class="runner-info">Use <strong>←</strong> and <strong>→</strong> arrows to change lanes and ride your scooter <strong>SMG</strong>. Avoid obstacles and get the highest score.</p>
+      <canvas id="runnerCanvas" width="420" height="260"></canvas>
+      <div class="runner-score" id="runnerScoreLabel">Score: 0</div>
+      <button class="btn-main" style="margin-top: 10px;" onclick="restartRunner()">Restart SMG Ride</button>
+      <button class="btn-main" style="margin-top: 8px;" onclick="closeRunnerGame()">Back to Home</button>
+    </div>
+  </div>
+
+  <div id="leaderboardModal" class="modal" style="display:none;">
+    <div class="modal-content card">
+      <h3>🏆 Leaderboard</h3>
+      <div id="leaderboardContent"></div>
+      <div style="margin-top:10px; display:flex; gap:8px;">
+        <button class="btn-main" onclick="exportLeaderboard()">Export CSV</button>
+        <button class="btn-main" onclick="closeLeaderboard()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="achievementsModal" class="modal" style="display:none;">
+    <div class="modal-content card">
+      <h3>🎖 Achievements</h3>
+      <div id="achievementsContent"></div>
+      <div style="margin-top:10px;"><button class="btn-main" onclick="closeAchievements()">Close</button></div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal" style="display:none;">
+    <div class="modal-content card">
+      <h3>⚙️ Settings</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label><input type="checkbox" id="settingSound"> Enable Sound</label>
+        <label><input type="checkbox" id="settingDark"> Dark Theme</label>
+        <label>Default Difficulty:
+          <select id="settingDefaultLevel"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="expert">Expert</option></select>
+        </label>
+        <label>Time per question: <input id="settingTime" type="number" min="5" max="60" style="width:80px"/></label>
+      </div>
+      <div style="margin-top:10px; display:flex; gap:8px;"><button class="btn-main" onclick="saveSettings()">Save</button><button class="btn-main" onclick="closeSettings()">Close</button></div>
+    </div>
+  </div>
+
+  <div id="editorModal" class="modal" style="display:none;">
+    <div class="modal-content card">
+      <h3>✏️ Question Editor</h3>
+      <div id="editorList" style="max-height:220px; overflow:auto;"></div>
+      <div style="margin-top:8px; display:flex; gap:8px;"><button class="btn-main" onclick="openQuestionForm()">Add Question</button><button class="btn-main" onclick="closeEditor()">Close</button></div>
+      <div id="questionForm" style="display:none; margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <div id="analyticsModal" class="modal" style="display:none;" role="dialog" aria-labelledby="analyticsTitle">
+    <div class="modal-content card">
+      <h3 id="analyticsTitle">📊 Analytics</h3>
+      <div id="analyticsContent"></div>
+      <div style="margin-top:10px;"><button class="btn-main" onclick="closeAnalytics()">Close</button></div>
+    </div>
+  </div>
+
+  <div id="reviewModal" class="modal" style="display:none;" role="dialog" aria-labelledby="reviewTitle">
+    <div class="modal-content card">
+      <h3 id="reviewTitle">📚 Spaced-Repetition Review</h3>
+      <p>Master questions you've missed by reviewing them.</p>
+      <div id="reviewContent" style="max-height:300px; overflow-y:auto; text-align:left;"></div>
+      <div style="margin-top:10px; display:flex; gap:8px;">
+        <button class="btn-main" onclick="startReviewQuiz()">Start Review</button>
+        <button class="btn-main" onclick="closeReview()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const allQuestions = [
+      {
+        text: "When should you cross the road?",
+        options: [
+          "Anywhere if the road looks empty",
+          "At a zebra crossing when signal is green for pedestrians",
+          "Between two parked cars",
+          "While using your phone"
+        ],
+        correctIndex: 1,
+        explanation: "Always cross at zebra crossing / pedestrian crossing when the signal allows you.",
+        level: "beginner"
+      },
+      {
+        text: "What should a two-wheeler rider always wear?",
+        options: ["Cap", "Helmet", "Headphones", "Nothing"],
+        correctIndex: 1,
+        explanation: "A helmet protects your head and is mandatory in most places.",
+        level: "beginner"
+      },
+      {
+        text: "Red traffic light means…",
+        options: ["Go faster", "Stop", "Turn right", "Slow down but keep moving"],
+        correctIndex: 1,
+        explanation: "Red means stop completely until the light changes.",
+        level: "beginner"
+      },
+      {
+        text: "Where should pedestrians walk if there is no footpath?",
+        options: [
+          "In the middle of the road",
+          "On the extreme right side facing traffic",
+          "On the extreme left side",
+          "Anywhere, doesn’t matter"
+        ],
+        correctIndex: 1,
+        explanation: "Walk facing the traffic so you can see vehicles coming.",
+        level: "beginner"
+      },
+      {
+        text: "Is it safe to use mobile while driving?",
+        options: [
+          "Yes, if road is empty",
+          "Only at low speed",
+          "No, it is dangerous and not allowed",
+          "Only at night"
+        ],
+        correctIndex: 2,
+        explanation: "Using phone while driving distracts you and is a major accident cause.",
+        level: "intermediate"
+      },
+      {
+        text: "You are on a bike and signal just turned yellow. What should you do?",
+        options: [
+          "Speed up and cross quickly",
+          "Slow down and be ready to stop",
+          "Blow horn and continue",
+          "Ignore it"
+        ],
+        correctIndex: 1,
+        explanation: "Yellow means be ready to stop, not speed up.",
+        level: "intermediate"
+      },
+      {
+        text: "A school bus is stopped picking children. You should:",
+        options: [
+          "Overtake quickly from any side",
+          "Blow horn continuously",
+          "Slow down, be alert and wait if needed",
+          "Ignore and keep same speed"
+        ],
+        correctIndex: 2,
+        explanation: "Children may suddenly cross the road, so stay slow and careful.",
+        level: "intermediate"
+      },
+      {
+        text: "What should you do at a pedestrian crossing with people waiting?",
+        options: [
+          "Drive faster to pass before they cross",
+          "Stop and let them cross safely",
+          "Turn on high beam",
+          "Blow horn so they move fast"
+        ],
+        correctIndex: 1,
+        explanation: "Vehicles must stop and allow pedestrians to cross.",
+        level: "intermediate"
+      },
+      {
+        text: "You are driving and an ambulance with siren is behind you. What is the correct action?",
+        options: [
+          "Race it",
+          "Block its way",
+          "Move left/right safely to give way as soon as possible",
+          "Ignore it"
+        ],
+        correctIndex: 2,
+        explanation: "Emergency vehicles need clear passage. Help them go first.",
+        level: "expert"
+      },
+      {
+        text: "At night on a two-lane road, you see oncoming traffic. You should:",
+        options: [
+          "Use high beam to see better",
+          "Flash high beam and stay on high beam",
+          "Dip to low beam to avoid dazzling others",
+          "Turn lights off to save battery"
+        ],
+        correctIndex: 2,
+        explanation: "Use low beam so you don’t blind oncoming drivers.",
+        level: "expert"
+      },
+      {
+        text: "On a wet road during rain, braking distance:",
+        options: [
+          "Increases, so you should keep more distance",
+          "Decreases, so you can drive faster",
+          "Does not change",
+          "Stops immediately"
+        ],
+        correctIndex: 0,
+        explanation: "Tyres may skid, so keep bigger gap and brake earlier.",
+        level: "expert"
+      },
+      {
+        text: "You feel very sleepy while driving a car on highway. Best action?",
+        options: [
+          "Drink coffee and keep driving fast",
+          "Open window and drive",
+          "Stop at safe place and rest or change driver",
+          "Turn music louder"
+        ],
+        correctIndex: 2,
+        explanation: "Driving sleepy is like drunk driving. Stop and rest.",
+        level: "expert"
+      }
+    ];
+
+    const QUESTIONS_PER_GAME = 4;
+
+    let currentLevel = "beginner";
+    let questions = [];
+    let currentIndex = 0;
+    let score = 0;
+    const pointsPerQuestion = 10;
+    let timePerQuestion = 15;
+    let timeLeft = timePerQuestion;
+    let timerId = null;
+    let answered = false;
+    let startTime = null;
+    let totalTime = 0;
+    let wrongAnswers = [];
+    let lifelines5050 = 2;
+    let analyticsRecords = [];
+    let questionStartTime = 0;
+
+    const homeScreen = document.getElementById("home");
+    const gameScreen = document.getElementById("game");
+    const resultScreen = document.getElementById("result");
+    const runnerScreen = document.getElementById("runner-game");
+
+    const questionText = document.getElementById("question-text");
+    const optionsDiv = document.getElementById("options");
+    const scoreDiv = document.getElementById("score");
+    const questionNumberDiv = document.getElementById("question-number");
+    const timerDiv = document.getElementById("timer");
+    const feedbackDiv = document.getElementById("feedback");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+
+    const finalScoreP = document.getElementById("final-score");
+    const messageP = document.getElementById("message");
+    const titleP = document.getElementById("title");
+    const starsDiv = document.getElementById("stars");
+    const tagsDiv = document.getElementById("tags");
+    const highscoreHome = document.getElementById("highscore-home");
+    const highscoreResult = document.getElementById("highscore-result");
+    const reviewSection = document.getElementById("reviewSection");
+    const reviewContent = document.getElementById("reviewContent");
+    const totalTimeDiv = document.getElementById("totalTime");
+    const avgTimeDiv = document.getElementById("avgTime");
+    const statsContainer = document.getElementById("statsContainer");
+    const infoPanel = document.getElementById("infoPanel");
+    const infoContent = document.getElementById("infoContent");
+    const attemptCountDiv = document.getElementById("attemptCount");
+    const bestScoreDiv = document.getElementById("bestScore");
+
+    const levelButtons = document.querySelectorAll(".btn-level");
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function getHighScoreKey(level) {
+      return "roadSafetyHighScore_" + level;
+    }
+
+    function getAttemptsKey(level) {
+      return "roadSafetyAttempts_" + level;
+    }
+
+    function getHighScore(level) {
+      const val = localStorage.getItem(getHighScoreKey(level));
+      return val ? parseInt(val, 10) : 0;
+    }
+
+    function getAttempts(level) {
+      const val = localStorage.getItem(getAttemptsKey(level));
+      return val ? parseInt(val, 10) : 0;
+    }
+
+    function incrementAttempts(level) {
+      const current = getAttempts(level);
+      localStorage.setItem(getAttemptsKey(level), String(current + 1));
+    }
+
+    function setHighScore(level, value) {
+      const prev = getHighScore(level);
+      if (value > prev) {
+        localStorage.setItem(getHighScoreKey(level), String(value));
+        return true;
+      }
+      return false;
+    }
+
+    function updateHighScoreTexts() {
+      const hs = getHighScore(currentLevel);
+      const attempts = getAttempts(currentLevel);
+      if (hs > 0) {
+        highscoreHome.textContent = `Best score on ${prettyLevelName(currentLevel)}: ${hs}`;
+      } else {
+        highscoreHome.textContent = "";
+      }
+      if (attempts > 0) {
+        attemptCountDiv.textContent = attempts;
+        bestScoreDiv.textContent = hs;
+        statsContainer.style.display = "grid";
+      } else {
+        statsContainer.style.display = "none";
+      }
+    }
+
+    function prettyLevelName(level) {
+      if (level === "beginner") return "Beginner";
+      if (level === "intermediate") return "Intermediate";
+      return "Expert";
+    }
+
+    levelButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        levelButtons.forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        currentLevel = btn.dataset.level;
+        updateHighScoreTexts();
+      });
+    });
+
+    infoPanel.addEventListener("click", () => {
+      infoPanel.classList.toggle("expanded");
+      infoContent.classList.toggle("expanded");
+    });
+
+    updateHighScoreTexts();
+    loadSettings();
+
+    document.addEventListener("keydown", (e) => {
+      const runnerVisible = runnerScreen.style.display !== "none";
+
+      if (runnerVisible) {
+        if (e.key === "ArrowLeft") moveRunnerLeft();
+        if (e.key === "ArrowRight") moveRunnerRight();
+        return;
+      }
+
+      if (e.key === "Enter") {
+        if (homeScreen.style.display !== "none") {
+          startGame();
+        } else if (resultScreen.style.display !== "none") {
+          restartGame();
+        }
+      }
+
+      if (gameScreen.style.display !== "none" && !answered) {
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 4) {
+          const buttons = document.querySelectorAll(".option-btn");
+          if (num - 1 < buttons.length) {
+            buttons[num - 1].click();
+          }
+        }
+      }
+    });
+
+    function startGame() {
+      loadCustomQuestions();
+      const pool = allQuestions.filter(q => q.level === currentLevel);
+      const shuffledPool = shuffle([...pool]);
+      questions = shuffledPool.slice(0, Math.min(QUESTIONS_PER_GAME, shuffledPool.length));
+
+      currentIndex = 0;
+      score = 0;
+      wrongAnswers = [];
+      lifelines5050 = 2;
+      document.getElementById('lifeline5050').textContent = String(lifelines5050);
+      analyticsRecords = [];
+      startTime = Date.now();
+
+      homeScreen.style.display = "none";
+      resultScreen.style.display = "none";
+      gameScreen.style.display = "block";
+
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      clearInterval(timerId);
+      answered = false;
+      timeLeft = timePerQuestion;
+      updateTimer();
+
+      const q = questions[currentIndex];
+      questionNumberDiv.textContent = `📌 Question ${currentIndex + 1} of ${questions.length}`;
+      questionText.textContent = q.text;
+      scoreDiv.textContent = `✓ Score: ${score}`;
+      feedbackDiv.textContent = "";
+      optionsDiv.innerHTML = "";
+
+      const progress = (currentIndex / questions.length) * 100;
+      progressBar.style.width = progress + "%";
+      progressText.textContent = Math.floor(progress) + "%";
+
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option-btn";
+        btn.onclick = () => handleAnswer(index);
+        optionsDiv.appendChild(btn);
+      });
+
+      questionStartTime = Date.now();
+
+      timerId = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          handleAnswer(null, true);
+        }
+      }, 1000);
+    }
+
+    function updateTimer() {
+      timerDiv.textContent = `⏱ ${timeLeft}s`;
+      if (timeLeft <= 5) {
+        timerDiv.classList.add("warning");
+      } else {
+        timerDiv.classList.remove("warning");
+      }
+    }
+
+    function handleAnswer(selectedIndex, isTimeout = false) {
+      if (answered) return;
+      answered = true;
+      clearInterval(timerId);
+
+      const q = questions[currentIndex];
+      const optionButtons = Array.from(document.querySelectorAll(".option-btn"));
+
+      optionButtons.forEach((btn, idx) => {
+        if (idx === q.correctIndex) {
+          btn.classList.add("correct");
+        }
+        if (selectedIndex !== null && idx === selectedIndex && selectedIndex !== q.correctIndex) {
+          btn.classList.add("wrong");
+        }
+        btn.disabled = true;
+      });
+
+      const isCorrect = !isTimeout && selectedIndex === q.correctIndex;
+
+      if (isTimeout) {
+        feedbackDiv.textContent = "⏰ Time up! " + q.explanation;
+      } else if (isCorrect) {
+        score += pointsPerQuestion;
+        scoreDiv.textContent = `✓ Score: ${score}`;
+        feedbackDiv.textContent = "✓ Correct! " + q.explanation;
+      } else {
+        feedbackDiv.textContent = "✗ Wrong. " + q.explanation;
+      }
+
+      try {
+        const timeSpent = Math.max(0, Math.round((Date.now() - questionStartTime) / 1000));
+        analyticsRecords.push({ question: q.text, time: timeSpent, correct: Boolean(isCorrect), level: q.level });
+      } catch (e) {}
+
+      if (isCorrect) playSound('correct');
+      else playSound('wrong');
+
+      if (!isCorrect) {
+        wrongAnswers.push({
+          question: q.text,
+          userAnswer: selectedIndex !== null ? q.options[selectedIndex] : "No answer",
+          correctAnswer: q.options[q.correctIndex]
+        });
+        recordWrongAnswer(q, selectedIndex !== null ? q.options[selectedIndex] : "No answer");
+      }
+
+      setTimeout(() => {
+        currentIndex++;
+        if (currentIndex < questions.length) {
+          loadQuestion();
+        } else {
+          endGame();
+        }
+      }, 1800);
+    }
+
+    function endGame() {
+      gameScreen.style.display = "none";
+      resultScreen.style.display = "block";
+
+      const maxScore = questions.length * pointsPerQuestion;
+      finalScoreP.textContent = `${score} / ${maxScore} Points`;
+
+      const endTime = Date.now();
+      totalTime = Math.floor((endTime - startTime) / 1000);
+      const minutes = Math.floor(totalTime / 60);
+      const seconds = totalTime % 60;
+      totalTimeDiv.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+
+      const avgSeconds = Math.floor(totalTime / questions.length);
+      const avgMinutes = Math.floor(avgSeconds / 60);
+      const avgSecs = avgSeconds % 60;
+      avgTimeDiv.textContent = `${avgMinutes}:${String(avgSecs).padStart(2, '0')}`;
+
+      progressBar.style.width = "100%";
+      progressText.textContent = "100%";
+
+      if (wrongAnswers.length > 0) {
+        reviewSection.style.display = "block";
+        reviewContent.innerHTML = "";
+        wrongAnswers.forEach((item, idx) => {
+          const reviewDiv = document.createElement("div");
+          reviewDiv.className = "review-item";
+          reviewDiv.innerHTML = `
+            <div class="review-item-q">Q${idx + 1}: ${item.question}</div>
+            <div class="review-item-your">Your answer: ${item.userAnswer}</div>
+            <div class="review-item-correct">✓ Correct: ${item.correctAnswer}</div>
+          `;
+          reviewContent.appendChild(reviewDiv);
+        });
+      } else {
+        reviewSection.style.display = "none";
+      }
+
+      incrementAttempts(currentLevel);
+
+      const ratio = score / maxScore;
+      let stars = "";
+      if (ratio === 1) stars = "⭐⭐⭐";
+      else if (ratio >= 0.6) stars = "⭐⭐☆";
+      else if (ratio > 0) stars = "⭐☆☆";
+      else stars = "☆☆☆";
+      starsDiv.textContent = stars;
+
+      let title = "";
+      if (ratio === 1) {
+        if (currentLevel === "beginner") title = "Perfect Pedestrian! 🏆";
+        else if (currentLevel === "intermediate") title = "Master Driver! 🏆";
+        else title = "Ultimate Safety Champion! 🏆";
+      } else if (ratio >= 0.6) {
+        title = "Great Job! 👍";
+      } else {
+        title = "Keep Practicing! 💪";
+      }
+      titleP.textContent = title;
+
+      if (ratio === 1) {
+        messageP.textContent = "Amazing! You understand road safety perfectly for this level.";
+      } else if (ratio >= 0.6) {
+        messageP.textContent = "Good performance! Review the questions you missed to improve.";
+      } else {
+        messageP.textContent = "Study the explanations and try again. Every attempt makes you safer!";
+      }
+
+      const isNewHigh = setHighScore(currentLevel, score);
+      const highScoreValue = getHighScore(currentLevel);
+      if (isNewHigh) {
+        highscoreResult.textContent = `🎯 New Personal Best on ${prettyLevelName(currentLevel)}: ${highScoreValue}`;
+      } else if (highScoreValue > 0) {
+        highscoreResult.textContent = `🏅 Best Score on ${prettyLevelName(currentLevel)}: ${highScoreValue}`;
+      } else {
+        highscoreResult.textContent = "";
+      }
+
+      tagsDiv.innerHTML = "";
+      const tagList = [];
+      if (ratio === 1) tagList.push("Perfect Score ✓");
+      if (ratio >= 0.8) tagList.push("Outstanding");
+      if (ratio >= 0.6) tagList.push("Safety Conscious");
+      if (currentLevel === "expert") tagList.push("Expert Mode");
+      if (currentLevel === "intermediate") tagList.push("Intermediate");
+
+      tagList.forEach((text, idx) => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = text;
+        span.style.animationDelay = `${idx * 0.1}s`;
+        tagsDiv.appendChild(span);
+      });
+
+      try {
+        const lbKey = 'rs_leaderboard_' + currentLevel;
+        const list = JSON.parse(localStorage.getItem(lbKey) || '[]');
+        list.push({ score, time: totalTime, date: Date.now() });
+        list.sort((a,b) => b.score - a.score || a.time - b.time);
+        localStorage.setItem(lbKey, JSON.stringify(list.slice(0, 50)));
+      } catch (e) {}
+
+      try {
+        const achKey = 'rs_achievements';
+        const ach = JSON.parse(localStorage.getItem(achKey) || '[]');
+        const attempts = getAttempts(currentLevel);
+        if (attempts === 1) ach.push({ id: 'first_play', title: 'First Attempt', date: Date.now() });
+        if (ratio === 1) ach.push({ id: 'perfect_' + currentLevel, title: 'Perfect Score (' + prettyLevelName(currentLevel) + ')', date: Date.now() });
+        const streakKey = 'rs_streak_' + currentLevel;
+        let streak = parseInt(localStorage.getItem(streakKey) || '0', 10);
+        if (ratio === 1) streak += 1; else streak = 0;
+        localStorage.setItem(streakKey, String(streak));
+        if (streak > 0 && streak % 3 === 0) ach.push({ id: 'streak_' + streak, title: `Streak x${streak}`, date: Date.now() });
+        const uniq = [];
+        const dedup = [];
+        ach.forEach(a => { if (!dedup.includes(a.id)) { dedup.push(a.id); uniq.push(a); } });
+        localStorage.setItem(achKey, JSON.stringify(uniq));
+      } catch (e) {}
+
+      updateHighScoreTexts();
+    }
+
+    function restartGame() {
+      resultScreen.style.display = "none";
+      homeScreen.style.display = "block";
+    }
+
+    const runnerCanvas = document.getElementById("runnerCanvas");
+    const runnerCtx = runnerCanvas.getContext("2d");
+    const runnerScoreLabel = document.getElementById("runnerScoreLabel");
+
+    let runnerLane = 1;
+    const runnerLaneCount = 3;
+    let runnerObstacles = [];
+    let runnerRunning = false;
+    let runnerScore = 0;
+    let runnerLastSpawn = 0;
+    let runnerSpeed = 3;
+    let runnerAnimationId = null;
+
+    function openRunnerGame() {
+      homeScreen.style.display = "none";
+      resultScreen.style.display = "none";
+      gameScreen.style.display = "none";
+      runnerScreen.style.display = "block";
+      initRunner();
+    }
+
+    function closeRunnerGame() {
+      cancelAnimationFrame(runnerAnimationId);
+      runnerRunning = false;
+      runnerScreen.style.display = "none";
+      homeScreen.style.display = "block";
+    }
+
+    function initRunner() {
+      runnerLane = 1;
+      runnerObstacles = [];
+      runnerRunning = true;
+      runnerScore = 0;
+      runnerLastSpawn = performance.now();
+      runnerSpeed = 3;
+      runnerScoreLabel.textContent = "Score: 0";
+      cancelAnimationFrame(runnerAnimationId);
+      runnerAnimationId = requestAnimationFrame(runnerLoop);
+    }
+
+    function moveRunnerLeft() {
+      if (!runnerRunning) return;
+      runnerLane = Math.max(0, runnerLane - 1);
+    }
+
+    function moveRunnerRight() {
+      if (!runnerRunning) return;
+      runnerLane = Math.min(runnerLaneCount - 1, runnerLane + 1);
+    }
+
+    function spawnObstacle() {
+      const lane = Math.floor(Math.random() * runnerLaneCount);
+      runnerObstacles.push({
+        lane,
+        y: -40,
+        height: 40
+      });
+    }
+
+    function runnerLoop(timestamp) {
+      if (!runnerRunning) {
+        drawRunnerGameOver();
+        return;
+      }
+
+      const canvas = runnerCanvas;
+      const ctx = runnerCtx;
+      const width = canvas.width;
+      const height = canvas.height;
+
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = "#222";
+      ctx.fillRect(0, 0, width, height);
+
+      const laneWidth = width / runnerLaneCount;
+      ctx.strokeStyle = "#555";
+      ctx.lineWidth = 2;
+      for (let i = 1; i < runnerLaneCount; i++) {
+        const x = laneWidth * i;
+        ctx.setLineDash([10, 10]);
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      if (timestamp - runnerLastSpawn > 900) {
+        spawnObstacle();
+        runnerLastSpawn = timestamp;
+        runnerSpeed += 0.1;
+      }
+
+      for (let i = 0; i < runnerObstacles.length; i++) {
+        runnerObstacles[i].y += runnerSpeed;
+      }
+
+      runnerObstacles = runnerObstacles.filter(ob => {
+        if (ob.y > height + 10) {
+          runnerScore += 5;
+          runnerScoreLabel.textContent = "Score: " + runnerScore;
+          return false;
+        }
+        return true;
+      });
+
+      const laneWidthInner = laneWidth;
+      const baseY = height - 70;
+      const bounce = Math.sin(timestamp / 180) * 2.5;
+      const scooterWidth = laneWidthInner * 0.55;
+      const scooterHeight = 36;
+      const scooterX = laneWidthInner * runnerLane + laneWidthInner * 0.225;
+      const scooterY = baseY + bounce;
+
+      const t = timestamp / 100;
+      const armSwing = Math.cos(t * 1.1) * 10;
+      const legSwing = Math.sin(t * 1.3) * 6;
+      const handleTilt = Math.sin(t * 0.8) * 0.15;
+
+      ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 8;
+
+      ctx.fillStyle = 'rgba(0,0,0,0.25)';
+      ctx.beginPath();
+      ctx.ellipse(scooterX + scooterWidth / 2, scooterY + scooterHeight + 8, scooterWidth * 0.5, 7, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const wheelRadius = scooterWidth * 0.2;
+      const wheelRotation = (timestamp / 15) % (Math.PI * 2);
+      const frontWheelX = scooterX + scooterWidth * 0.82;
+      const backWheelX = scooterX + scooterWidth * 0.18;
+      const wheelY = scooterY + scooterHeight;
+
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetY = 2;
+
+      ctx.fillStyle = "#0a0a0a";
+      ctx.beginPath();
+      ctx.arc(frontWheelX, wheelY, wheelRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(backWheelX, wheelY, wheelRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#333";
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < 8; i++) {
+        const angle = wheelRotation + (i * Math.PI / 4);
+        const x1 = frontWheelX + Math.cos(angle) * wheelRadius * 0.4;
+        const y1 = wheelY + Math.sin(angle) * wheelRadius * 0.4;
+        const x2 = frontWheelX + Math.cos(angle) * wheelRadius * 0.85;
+        const y2 = wheelY + Math.sin(angle) * wheelRadius * 0.85;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < 8; i++) {
+        const angle = wheelRotation + (i * Math.PI / 4);
+        const x1 = backWheelX + Math.cos(angle) * wheelRadius * 0.4;
+        const y1 = wheelY + Math.sin(angle) * wheelRadius * 0.4;
+        const x2 = backWheelX + Math.cos(angle) * wheelRadius * 0.85;
+        const y2 = wheelY + Math.sin(angle) * wheelRadius * 0.85;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "#1a1a1a";
+      ctx.fillRect(scooterX + scooterWidth * 0.12, scooterY + scooterHeight * 0.65, scooterWidth * 0.76, 5);
+
+      ctx.strokeStyle = "#444";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(backWheelX, wheelY - wheelRadius - 3);
+      ctx.lineTo(backWheelX + scooterWidth * 0.15, scooterY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(frontWheelX, wheelY - wheelRadius - 3);
+      ctx.lineTo(frontWheelX - scooterWidth * 0.15, scooterY);
+      ctx.stroke();
+
+      const handleBaseX = scooterX + scooterWidth * 0.65;
+      const handleBaseY = scooterY - 5;
+
+      ctx.strokeStyle = "#222";
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
+
+      ctx.save();
+      ctx.translate(handleBaseX, handleBaseY);
+      ctx.rotate(handleTilt);
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -24);
+      ctx.stroke();
+
+      ctx.fillStyle = "#333";
+      ctx.fillRect(-9, -26, 18, 3);
+
+      ctx.restore();
+
+      const riderX = scooterX + scooterWidth * 0.4;
+      const riderBaseY = scooterY - 12;
+
+      ctx.fillStyle = "#2c3e50";
+      ctx.beginPath();
+      ctx.moveTo(riderX - 8, riderBaseY);
+      ctx.lineTo(riderX + 8, riderBaseY);
+      ctx.lineTo(riderX + 10, riderBaseY + 18);
+      ctx.lineTo(riderX - 10, riderBaseY + 18);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = "#2c3e50";
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#1a1a1a";
+      ctx.beginPath();
+      ctx.moveTo(riderX - 7, riderBaseY + 5);
+      ctx.lineTo(riderX + 7, riderBaseY + 5);
+      ctx.stroke();
+
+      const headX = riderX;
+      const headY = riderBaseY - 12;
+      const headRadius = 8;
+
+      ctx.fillStyle = "#d4a574";
+      ctx.beginPath();
+      ctx.arc(headX, headY, headRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#f5deb3";
+      ctx.beginPath();
+      ctx.arc(headX, headY + 2, headRadius * 0.6, 0, Math.PI);
+      ctx.fill();
+
+      ctx.fillStyle = "#1a1a1a";
+      ctx.beginPath();
+      ctx.arc(headX - 2.5, headY - 1, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(headX + 2.5, headY - 1, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.arc(headX - 2.5, headY - 1.5, 0.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(headX + 2.5, headY - 1.5, 0.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(headX - 2, headY - 2.5, 0.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(headX + 3, headY - 2.5, 0.4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#333";
+      ctx.beginPath();
+      ctx.arc(headX, headY + 1.5, 1.2, 0, Math.PI);
+      ctx.fill();
+
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = "#34495e";
+      ctx.lineCap = "round";
+
+      const leftShoulderX = riderX - 6;
+      const shoulderY = riderBaseY + 3;
+      const leftArmX = leftShoulderX - 4 - armSwing * 0.4;
+      const leftArmY = shoulderY + 8;
+
+      ctx.beginPath();
+      ctx.moveTo(leftShoulderX, shoulderY);
+      ctx.lineTo(leftArmX, leftArmY);
+      ctx.stroke();
+
+      ctx.fillStyle = "#d4a574";
+      ctx.beginPath();
+      ctx.arc(leftArmX, leftArmY, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      const rightShoulderX = riderX + 6;
+      const rightArmX = rightShoulderX + 4 + armSwing * 0.4;
+      const rightArmY = shoulderY + 8;
+
+      ctx.beginPath();
+      ctx.moveTo(rightShoulderX, shoulderY);
+      ctx.lineTo(rightArmX, rightArmY);
+      ctx.stroke();
+
+      ctx.fillStyle = "#d4a574";
+      ctx.beginPath();
+      ctx.arc(rightArmX, rightArmY, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#333";
+
+      const legBaseY = riderBaseY + 18;
+      const leftLegX = riderX - 4;
+      const leftLegY = legBaseY + 10;
+      const leftLegEndX = leftLegX - legSwing * 0.5;
+
+      ctx.beginPath();
+      ctx.moveTo(leftLegX, legBaseY);
+      ctx.lineTo(leftLegEndX, leftLegY);
+      ctx.stroke();
+
+      ctx.fillStyle = "#1a1a1a";
+      ctx.beginPath();
+      ctx.ellipse(leftLegEndX, leftLegY + 1.5, 2.5, 4, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+
+      const rightLegX = riderX + 4;
+      const rightLegY = legBaseY + 10;
+      const rightLegEndX = rightLegX + legSwing * 0.5;
+
+      ctx.beginPath();
+      ctx.moveTo(rightLegX, legBaseY);
+      ctx.lineTo(rightLegEndX, rightLegY);
+      ctx.stroke();
+
+      ctx.fillStyle = "#1a1a1a";
+      ctx.beginPath();
+      ctx.ellipse(rightLegEndX, rightLegY + 1.5, 2.5, 4, 0.3, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowColor = "transparent";
+      ctx.font = "bold 12px Arial";
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "center";
+      ctx.strokeStyle = "#ff6b35";
+      ctx.lineWidth = 2;
+      ctx.strokeText("SMG", scooterX + scooterWidth / 2, scooterY + scooterHeight * 0.5);
+      ctx.fillText("SMG", scooterX + scooterWidth / 2, scooterY + scooterHeight * 0.5);
+      ctx.textAlign = "start";
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "13px Poppins";
+      ctx.textAlign = "left";
+      ctx.fillText("Score: " + runnerScore, 10, 18);
+      ctx.textAlign = "start";
+
+      ctx.fillStyle = "#ff6b35";
+      for (let ob of runnerObstacles) {
+        const obX = laneWidthInner * ob.lane + laneWidthInner * 0.25;
+        const obY = ob.y;
+        const obWidth = laneWidthInner * 0.5;
+        const obHeight = ob.height;
+        ctx.fillRect(obX, obY, obWidth, obHeight);
+
+        const overlapX = (ob.lane === runnerLane);
+        const playerBBoxY = scooterY;
+        const playerBBoxHeight = scooterHeight + 10;
+        const overlapY = obY + obHeight > playerBBoxY && obY < playerBBoxY + playerBBoxHeight;
+        if (overlapX && overlapY) {
+          runnerRunning = false;
+        }
+      }
+
+      runnerAnimationId = requestAnimationFrame(runnerLoop);
+    }
+
+    function drawRunnerGameOver() {
+      const ctx = runnerCtx;
+      const canvas = runnerCanvas;
+      const width = canvas.width;
+      const height = canvas.height;
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = "#ff6b35";
+      ctx.font = "20px Poppins";
+      ctx.textAlign = "center";
+      ctx.fillText("SMG Ride Over", width / 2, height / 2 - 10);
+      ctx.fillStyle = "#fff";
+      ctx.font = "14px Poppins";
+      ctx.fillText("Score: " + runnerScore, width / 2, height / 2 + 15);
+      ctx.textAlign = "start";
+
+      runnerScoreLabel.textContent = "Ride Over! Final Score: " + runnerScore;
+    }
+
+    function restartRunner() {
+      initRunner();
+    }
+
+    function loadSettings() {
+      try {
+        const sound = localStorage.getItem('rs_soundEnabled');
+        const dark = localStorage.getItem('rs_darkTheme');
+        const defLevel = localStorage.getItem('rs_defaultLevel');
+        const t = localStorage.getItem('rs_timePerQuestion');
+        if (sound === null) localStorage.setItem('rs_soundEnabled', 'true');
+        if (dark === 'true') document.body.classList.add('dark');
+        if (defLevel) {
+          currentLevel = defLevel;
+          levelButtons.forEach(b => b.classList.toggle('selected', b.dataset.level === defLevel));
+        }
+        if (t) {
+          timePerQuestion = parseInt(t, 10) || timePerQuestion;
+        }
+      } catch (e) {}
+    }
+
+    function openSettings() {
+      document.getElementById('settingsModal').style.display = 'flex';
+      document.getElementById('settingSound').checked = localStorage.getItem('rs_soundEnabled') !== 'false';
+      document.getElementById('settingDark').checked = document.body.classList.contains('dark');
+      document.getElementById('settingDefaultLevel').value = localStorage.getItem('rs_defaultLevel') || currentLevel;
+      document.getElementById('settingTime').value = localStorage.getItem('rs_timePerQuestion') || timePerQuestion;
+    }
+
+    function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+
+    function saveSettings() {
+      const sound = document.getElementById('settingSound').checked;
+      const dark = document.getElementById('settingDark').checked;
+      const def = document.getElementById('settingDefaultLevel').value;
+      const t = parseInt(document.getElementById('settingTime').value, 10) || timePerQuestion;
+      localStorage.setItem('rs_soundEnabled', String(sound));
+      localStorage.setItem('rs_darkTheme', String(dark));
+      localStorage.setItem('rs_defaultLevel', def);
+      localStorage.setItem('rs_timePerQuestion', String(t));
+      if (dark) document.body.classList.add('dark'); else document.body.classList.remove('dark');
+      timePerQuestion = t;
+      currentLevel = def;
+      levelButtons.forEach(b => b.classList.toggle('selected', b.dataset.level === def));
+      closeSettings();
+    }
+
+    function openLeaderboard() {
+      const modal = document.getElementById('leaderboardModal');
+      const content = document.getElementById('leaderboardContent');
+      const key = 'rs_leaderboard_' + currentLevel;
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      if (!list.length) content.innerHTML = '<p>No scores yet for this level.</p>';
+      else {
+        content.innerHTML = '<ol>' + list.slice(0,10).map(it => `<li>${it.score} pts • ${it.time}s • ${new Date(it.date).toLocaleString()}</li>`).join('') + '</ol>';
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
+
+    function exportLeaderboard() {
+      const key = 'rs_leaderboard_' + currentLevel;
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      if (!list.length) { alert('No leaderboard data'); return; }
+      let csv = 'score,time,date\n';
+      list.forEach(r => { csv += `${r.score},${r.time},${new Date(r.date).toISOString()}\n`; });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `leaderboard_${currentLevel}.csv`; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function openAchievements() {
+      const modal = document.getElementById('achievementsModal');
+      const cont = document.getElementById('achievementsContent');
+      const list = JSON.parse(localStorage.getItem('rs_achievements') || '[]');
+      if (!list.length) cont.innerHTML = '<p>No achievements yet. Play to earn badges!</p>';
+      else cont.innerHTML = list.map(a => `<div style="padding:6px 0">• <strong>${a.title}</strong> <small style="opacity:.7">${new Date(a.date).toLocaleDateString()}</small></div>`).join('');
+      modal.style.display = 'flex';
+    }
+
+    function closeAchievements() { document.getElementById('achievementsModal').style.display = 'none'; }
+
+    function loadCustomQuestions() {
+      try {
+        const custom = JSON.parse(localStorage.getItem('rs_customQuestions') || '[]');
+        custom.forEach(c => {
+          if (!allQuestions.some(a => a.text === c.text)) allQuestions.push(c);
+        });
+      } catch (e) {}
+    }
+
+    function openEditor() {
+      document.getElementById('editorModal').style.display = 'block';
+      renderEditorList();
+    }
+
+    function closeEditor() { document.getElementById('editorModal').style.display = 'none'; }
+
+    function renderEditorList() {
+      const list = JSON.parse(localStorage.getItem('rs_customQuestions') || '[]');
+      const el = document.getElementById('editorList');
+      if (!list.length) el.innerHTML = '<p>No custom questions yet.</p>';
+      else el.innerHTML = list.map((q,i) => `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);">Q: ${q.text}<br/><small>Level: ${q.level}</small><div style="margin-top:6px;"><button class='btn-level' onclick='editQuestion(${i})'>Edit</button> <button class='btn-level' onclick='deleteQuestion(${i})'>Delete</button></div></div>`).join('');
+    }
+
+    function openQuestionForm(editIndex) {
+      const form = document.getElementById('questionForm');
+      form.style.display = 'block';
+      form.innerHTML = `
+        <label>Question text:<br/><textarea id='q_text' style='width:100%'></textarea></label>
+        <label>Options (comma separated):<br/><input id='q_opts' style='width:100%'/></label>
+        <label>Correct index (0-based):<br/><input id='q_correct' type='number' min='0' max='3'/></label>
+        <label>Level:<br/><select id='q_level'><option value='beginner'>Beginner</option><option value='intermediate'>Intermediate</option><option value='expert'>Expert</option></select></label>
+        <div style='margin-top:8px;'><button class='btn-main' onclick='saveQuestionForm()'>Save</button> <button class='btn-main' onclick="(function(){document.getElementById('questionForm').style.display='none';})()">Cancel</button></div>
+      `;
+      form.dataset.edit = editIndex ?? '';
+      if (typeof editIndex === 'number') {
+        const list = JSON.parse(localStorage.getItem('rs_customQuestions') || '[]');
+        const q = list[editIndex];
+        if (q) {
+          document.getElementById('q_text').value = q.text;
+          document.getElementById('q_opts').value = q.options.join(',');
+          document.getElementById('q_correct').value = q.correctIndex;
+          document.getElementById('q_level').value = q.level;
+        }
+      }
+    }
+
+    function saveQuestionForm() {
+      const text = document.getElementById('q_text').value.trim();
+      const opts = document.getElementById('q_opts').value.split(',').map(s=>s.trim()).filter(Boolean);
+      const correct = parseInt(document.getElementById('q_correct').value,10);
+      const level = document.getElementById('q_level').value;
+      if (!text || opts.length < 2 || isNaN(correct) || correct < 0) { alert('Please provide question, options and correct index'); return; }
+      const obj = { text, options: opts, correctIndex: correct, explanation: '', level };
+      const key = 'rs_customQuestions';
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      const editIndex = document.getElementById('questionForm').dataset.edit;
+      if (editIndex) list[parseInt(editIndex,10)] = obj; else list.push(obj);
+      localStorage.setItem(key, JSON.stringify(list));
+      document.getElementById('questionForm').style.display = 'none';
+      renderEditorList();
+    }
+
+    function deleteQuestion(i) {
+      const key = 'rs_customQuestions';
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      list.splice(i,1);
+      localStorage.setItem(key, JSON.stringify(list));
+      renderEditorList();
+    }
+
+    function editQuestion(i) { openEditor(); openQuestionForm(i); }
+
+    function openAnalytics() {
+      const modal = document.getElementById('analyticsModal');
+      const cont = document.getElementById('analyticsContent');
+      const stored = JSON.parse(localStorage.getItem('rs_analytics') || '[]');
+      const combined = stored.concat(analyticsRecords);
+      if (!combined.length) cont.innerHTML = '<p>No analytics yet.</p>';
+      else {
+        const avg = Math.round((combined.reduce((s,r)=>s+r.time,0)/combined.length)*10)/10;
+        cont.innerHTML = `<p>Questions answered: ${combined.length}</p><p>Avg time: ${avg}s</p>`;
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeAnalytics() { document.getElementById('analyticsModal').style.display = 'none'; }
+
+    function use5050() {
+      if (lifelines5050 <= 0) return;
+      const q = questions[currentIndex];
+      const buttons = Array.from(document.querySelectorAll('.option-btn'));
+      const incorrect = buttons.map((b,i)=>i).filter(i=>i!==q.correctIndex);
+      shuffle(incorrect);
+      const toDisable = incorrect.slice(0, Math.max(0, incorrect.length - 1));
+      for (let i=0;i<toDisable.length;i++) {
+        const b = buttons[toDisable[i]];
+        if (b) { b.disabled = true; b.classList.add('wrong'); }
+      }
+      lifelines5050 -= 1;
+      document.getElementById('lifeline5050').textContent = String(lifelines5050);
+    }
+
+    window.addEventListener('beforeunload', () => {
+      try {
+        const stored = JSON.parse(localStorage.getItem('rs_analytics') || '[]');
+        localStorage.setItem('rs_analytics', JSON.stringify(stored.concat(analyticsRecords).slice(-1000)));
+      } catch (e) {}
+    });
+
+    function openReview() {
+      const modal = document.getElementById('reviewModal');
+      const cont = document.getElementById('reviewContent');
+      const wrongKey = 'rs_wrongAnswers';
+      const stored = JSON.parse(localStorage.getItem(wrongKey) || '[]');
+      const grouped = {};
+      stored.forEach(wa => {
+        if (!grouped[wa.question]) grouped[wa.question] = { question: wa.question, count: 0 };
+        grouped[wa.question].count += 1;
+      });
+      const sorted = Object.values(grouped).sort((a, b) => b.count - a.count);
+      if (!sorted.length) cont.innerHTML = '<p>No questions to review! Great job.</p>';
+      else {
+        cont.innerHTML = '<p style="margin:0 0 10px;">Review ' + sorted.length + ' questions you missed:</p>';
+        cont.innerHTML += sorted.slice(0, 15).map((q, i) => `<div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1);"><strong>${i+1}.</strong> ${q.question} <small style="opacity:.6;">(${q.count}x)</small></div>`).join('');
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeReview() { document.getElementById('reviewModal').style.display = 'none'; }
+
+    function startReviewQuiz() {
+      const wrongKey = 'rs_wrongAnswers';
+      const stored = JSON.parse(localStorage.getItem(wrongKey) || '[]');
+      const missed = {};
+      stored.forEach(wa => { if (!missed[wa.question]) missed[wa.question] = wa; });
+      const reviewQs = allQuestions.filter(q => missed[q.text]);
+      if (!reviewQs.length) { alert('No questions to review.'); return; }
+      questions = reviewQs;
+      currentIndex = 0;
+      score = 0;
+      wrongAnswers = [];
+      lifelines5050 = 1;
+      analyticsRecords = [];
+      startTime = Date.now();
+      document.getElementById('lifeline5050').textContent = String(lifelines5050);
+      closeReview();
+      homeScreen.style.display = 'none';
+      resultScreen.style.display = 'none';
+      gameScreen.style.display = 'block';
+      loadQuestion();
+    }
+
+    function recordWrongAnswer(q, userAnswer) {
+      try {
+        const key = 'rs_wrongAnswers';
+        const list = JSON.parse(localStorage.getItem(key) || '[]');
+        list.push({ question: q.text, userAnswer, timestamp: Date.now() });
+        localStorage.setItem(key, JSON.stringify(list.slice(-500)));
+      } catch (e) {}
+    }
+
+    function playSound(type) {
+      const soundEnabled = localStorage.getItem('rs_soundEnabled') !== 'false';
+      if (!soundEnabled) return;
+    }
+
+    if ('serviceWorker' in navigator) {
+      const swCode = `self.addEventListener('install', e => { e.waitUntil(caches.open('rsh-v1')); });
+        self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });`;
+      const swBlob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(() => {});
+    }
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => { deferredPrompt = e; });
+    function installApp() {
+      if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+    }
+  </script>
+  
+<script>
+  async function logout() {
+    await supabaseClient.auth.signOut();
+    window.location.href = "landing.html";
+  }
+</script>
+
+
+
+</body>
+</html>

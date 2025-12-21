@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMG | Road Safety Hero</title>
+
+<style>
+:root{
+  --smg-blue:#1e3c72;
+  --smg-dark:#0f1c2e;
+  --smg-accent:#ffb703;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:'Segoe UI', sans-serif;
+  background:linear-gradient(120deg,var(--smg-blue),var(--smg-dark));
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+}
+
+/* HERO */
+.hero{
+  flex:1;
+  background:url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d") center/cover no-repeat;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(15,28,46,.75);
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:900px;
+  padding:30px;
+}
+
+.hero-content h1{
+  font-size:3.2rem;
+  margin-bottom:15px;
+}
+
+.hero-content span{
+  color:var(--smg-accent);
+}
+
+.hero-content p{
+  font-size:1.25rem;
+  opacity:.95;
+  margin-bottom:40px;
+}
+
+/* BUTTONS */
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  flex-wrap:wrap;
+}
+
+.buttons a{
+  padding:15px 40px;
+  border-radius:30px;
+  background:linear-gradient(135deg,var(--smg-blue),#274b8c);
+  color:#fff;
+  text-decoration:none;
+  font-size:1.1rem;
+  font-weight:600;
+  transition:.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+.buttons a.secondary{
+  background:transparent;
+  border:2px solid var(--smg-accent);
+  color:var(--smg-accent);
+}
+
+.buttons a:hover{
+  transform:translateY(-3px);
+}
+
+/* FEATURES */
+.features{
+  background:#fff;
+  color:#222;
+  text-align:center;
+  padding:70px 20px;
+}
+
+.features h2{
+  font-size:2.3rem;
+  margin-bottom:35px;
+  color:var(--smg-blue);
+}
+
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:30px;
+  max-width:1000px;
+  margin:auto;
+}
+
+.feature{
+  padding:25px;
+  border-radius:18px;
+  background:#f4f6fa;
+  box-shadow:0 15px 35px rgba(0,0,0,.15);
+  transition:.3s;
+}
+
+.feature:hover{
+  transform:translateY(-6px);
+}
+
+.feature span{
+  font-size:2.2rem;
+}
+
+.feature h3{
+  margin:15px 0 10px;
+  color:var(--smg-blue);
+}
+
+.feature p{
+  font-size:.95rem;
+  color:#555;
+}
+
+/* FOOTER */
+footer{
+  background:var(--smg-dark);
+  text-align:center;
+  padding:18px;
+  font-size:.9rem;
+  opacity:.85;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .hero-content h1{
+    font-size:2.2rem;
+  }
+  .hero-content p{
+    font-size:1.05rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1><span>SMG</span> Road Safety Hero</h1>
+    <p>
+      Learn road safety through interactive challenges, real-life scenarios,
+      and gamified awareness programs.
+    </p>
+
+    <div class="buttons">
+      <a href="login.html">Login</a>
+      <a href="register.html" class="secondary">Register</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Why Choose Road Safety Hero?</h2>
+
+  <div class="feature-grid">
+    <div class="feature">
+      <span>🚦</span>
+      <h3>Interactive Learning</h3>
+      <p>Understand traffic rules through engaging activities and examples.</p>
+    </div>
+
+    <div class="feature">
+      <span>🎮</span>
+      <h3>Gamified Experience</h3>
+      <p>Earn rewards and stay motivated while learning road safety.</p>
+    </div>
+
+    <div class="feature">
+      <span>📊</span>
+      <h3>Progress Tracking</h3>
+      <p>Track your improvement and build better safety habits.</p>
+    </div>
+
+    <div class="feature">
+      <span>🌍</span>
+      <h3>Accessible Anywhere</h3>
+      <p>Works smoothly on mobile, tablet, and desktop.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  © 2025 SMG Road Safety Hero · Drive Safe, Save Lives
+</footer>
+
+</body>
+</html>
