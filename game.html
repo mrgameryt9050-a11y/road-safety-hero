@@ -6,13 +6,21 @@
 <script>
   const supabaseClient = supabase.createClient(
     "https://czbznranghdpefswmluc.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnpucmFuZ2hkcGVmc3dtbHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxNTQxNTUsImV4cCI6MjA4MTczMDE1NX0.lF69yvMl82OL-ZouGUUU8u54VP4N-4X3DzVwMcDE1Ng"
+    "YOUR_ANON_KEY",
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
   );
 
   async function checkAuth() {
-    const { data } = await supabaseClient.auth.getSession();
-    if (!data.session) {
-      window.location.href = "login.html";
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error || !data.session) {
+      window.location.replace("login.html");
     }
   }
 
@@ -21,13 +29,7 @@
 
 
 
-    <script>
-  const user = JSON.parse(localStorage.getItem("rsh_user"));
-  if (!user) {
-    window.location.href = "login.html";
-  }
-</script>
-
+   
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2213,4 +2215,5 @@
 
 </body>
 </html>
+
 
