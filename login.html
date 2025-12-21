@@ -225,15 +225,14 @@ input:focus{
     }
 
     // IMPORTANT: wait for session to exist
-    if (data.session) {
+   setTimeout(() => {
       window.location.href = "game.html";
-    } else {
-      alert("Login failed, no session created");
-    }
+    }, 300);
   }
 </script>
 
 
 </body>
 </html>
+
 
