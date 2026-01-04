@@ -34,34 +34,30 @@ body{
   overflow:hidden;
 }
 
-/* LEFT BRAND */
+/* LEFT IMAGE */
 .left{
   flex:1;
-  background:url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d") center/cover no-repeat;
   position:relative;
+  overflow:hidden;
 }
 
-.left::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(21,34,56,.75);
+.left img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
+/* BRAND TEXT */
 .brand{
   position:absolute;
-  inset:0;
+  top:30px;
+  left:30px;
   color:#fff;
-  z-index:2;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:40px;
 }
 
 .brand h1{
   font-size:2.6rem;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 
 .brand span{
@@ -69,8 +65,8 @@ body{
 }
 
 .brand p{
-  opacity:.9;
   font-size:1rem;
+  opacity:.95;
 }
 
 /* RIGHT LOGIN */
@@ -161,11 +157,18 @@ input:focus{
 
 <div class="wrapper">
 
-  <!-- LEFT BRAND -->
+  <!-- LEFT IMAGE -->
   <div class="left">
+    <img
+      src="https://images.unsplash.com/photo-1761473485484-28af25f7cb6a?q=80&w=1200&auto=format&fit=crop"
+      alt="Road Safety">
+
     <div class="brand">
       <h1><span>SMG</span> Road Safety</h1>
-      <p>Driving Awareness • Saving Lives • Building Responsible Roads</p>
+      <p>
+        Follow road signs,<br>
+        stay safe, save lives.
+      </p>
     </div>
   </div>
 
@@ -198,41 +201,37 @@ input:focus{
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabaseClient = supabase.createClient(
-    "https://czbznranghdpefswmluc.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnpucmFuZ2hkcGVmc3dtbHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxNTQxNTUsImV4cCI6MjA4MTczMDE1NX0.lF69yvMl82OL-ZouGUUU8u54VP4N-4X3DzVwMcDE1Ng",
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
+const supabaseClient = supabase.createClient(
+  "https://czbznranghdpefswmluc.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnpucmFuZ2hkcGVmc3dtbHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxNTQxNTUsImV4cCI6MjA4MTczMDE1NX0.lF69yvMl82OL-ZouGUUU8u54VP4N-4X3DzVwMcDE1Ng",
+  {
+    auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true
     }
-  );
-
-  async function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    // IMPORTANT: wait for session to exist
-   setTimeout(() => {
-      window.location.href = "game.html";
-    }, 300);
   }
-</script>
+);
 
+async function login(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  setTimeout(() => {
+    window.location.href = "game.html";
+  }, 300);
+}
+</script>
 
 </body>
 </html>
-
-
